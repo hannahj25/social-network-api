@@ -49,7 +49,7 @@ router.put('/users/:userId', (req, res) => {
 
 // Delete user
 router.delete('/users/:userId', (req, res) => {
-    User.findOneAndDelete({ _id: req.params.userId})
+    User.findOneAndDelete(req.params.userId)
     .then((user) =>
     !user
     ? res.status(404).json({ message: "No user with that id!"})
@@ -75,14 +75,14 @@ router.post('/users/:userId/friends/:friendId', (req, res) => {
 })
 
 // Delete friend
-router.delete('users/userId/friends/:friendId', (req, res) => {
+router.delete('users/:userId/friends/:friendId', (req, res) => {
     User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $pull: { friends: req.params.friendId }},
-        { runValidators: true, new: true }
+        { _id: req.params.userId},
+         {$pull: { friends:  { friendId: req.params.friendId} }},
     )
     .then((user) =>
-    !user? res.status(404).json({message: 'No user with that id!'})
+    !user
+    ? res.status(404).json({message: 'No user with that id!'})
     : res.json(user)
     )
     .catch((err) => res.status(500).json(err));
