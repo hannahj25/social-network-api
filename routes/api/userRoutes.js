@@ -59,4 +59,33 @@ router.delete('/users/:userId', (req, res) => {
     .catch((err) => res.status(500).json(err))
 });
 
+// Add friend
+router.post('/users/:userId/friends/:friendId', (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId }},
+        { runValidators: true, new: true}
+    )
+    .then((user) =>
+    !user
+    ? res.status(404).json({message: 'No user with that id!'})
+    : res.json(user)
+    )
+    .catch((err) => res.status(500).json(err));
+})
+
+// Delete friend
+router.delete('users/userId/friends/:friendId', (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId }},
+        { runValidators: true, new: true }
+    )
+    .then((user) =>
+    !user? res.status(404).json({message: 'No user with that id!'})
+    : res.json(user)
+    )
+    .catch((err) => res.status(500).json(err));
+})
+
 module.exports = router
