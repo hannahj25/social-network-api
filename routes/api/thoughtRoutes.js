@@ -59,29 +59,63 @@ router.put('/thoughts/:thoughtId', (req, res) => {
     });
 })
 
+
+// soft
+
+
 // Delete thought
-router.delete('/thoughts/:thoughtId', (req, res) => {
+router.delete('/thoughts/:thoughtId', async (req, res) => {
     Thought.findOneAndDelete(
         {_id: req.params.thoughtId}
     )
-    .then((thought) =>
-    !thought? res.status(404).json({message: 'No thought with that id!'})
-    : User.findOneAndUpdate(
-        { thoughts: req.params.thoughtId },
-        { $pull: { thoughts: req.params.thoughtId} },
-        { new: true }
-       )
-    )
-    .then((user) =>
-    !user
-    ? res.status(404).json({ message: 'Thought deleted but no user with that id!'})
-    : res.json({ message: 'Thought successfully deleted!'})
-    )
+    .then(async (thought) =>{
+        if(!thought){
+            return res.status(404).json({message: 'No thought with that id!'})
+        }
+        const user = await User.findOneAndUpdate(
+            { thoughts: req.params.thoughtId },
+            { $pull: { thoughts: req.params.thoughtId} },
+            { new: true }
+        )
+
+        if(!user){
+            return res.status(404).json({ message: 'Thought deleted but no user with that id!'});
+        }
+        res.json({ message: 'Thought successfully deleted!'})
+        
+    })
     .catch((err) => res.status(500).json(err));
 })
 
 // Create reaction to thought
+router.post('/thoughts/:thoughtId/reactions', (req, res) => {
+    Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $addToSet: { reactions: {body: req.body.body, userId: req.body.userId} }},
+        { runValidators: true, new: true}
+    )
+    .then((thought) =>
+    !thought
+    ? res.status(404).json({message: 'No thought with that id!'})
+    : res.json(thought)
+    )
+    .catch((err) => res.status(500).json(err));
+})
 
-// Delte reaction from thought
+
+// Delete reaction from thought
+router.delete('/thoughts/:thoughtId/reactions/:reactionId', (req, res) => {
+    Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId},
+         {$pull: { reactions:  { _id: req.params.reactionId} }},
+         {new: true}
+    )
+    .then((thought) =>
+    !thought
+    ? res.status(404).json({message: 'No thought with that id!'})
+    : res.json(thought)
+    )
+    .catch((err) => res.status(500).json(err));
+})
 
 module.exports = router

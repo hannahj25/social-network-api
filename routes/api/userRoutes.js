@@ -50,12 +50,13 @@ router.put('/users/:userId', (req, res) => {
 // Delete user
 router.delete('/users/:userId', (req, res) => {
     User.findOneAndDelete(req.params.userId)
-    .then((user) =>
-    !user
-    ? res.status(404).json({ message: "No user with that id!"})
-    : Thought.deleteMany({ _id: { $in: user.thoughts }})
-    )
-    .then(() => res.json({ message: "User and associated thoughts deleted!"}))
+    .then(async (user) =>{
+        if(!user){
+            return res.status(404).json({ message: "No user with that id!"})
+        }
+        await Thought.deleteMany({ _id: { $in: user.thoughts }})
+        res.json({ message: "User and associated thoughts deleted!"});
+    })
     .catch((err) => res.status(500).json(err))
 });
 
@@ -75,7 +76,7 @@ router.post('/users/:userId/friends/:friendId', (req, res) => {
 })
 
 // Delete friend
-router.delete('users/:userId/friends/:friendId', (req, res) => {
+router.delete('/users/:userId/friends/:friendId', (req, res) => {
     User.findOneAndUpdate(
         { _id: req.params.userId},
          {$pull: { friends:  { friendId: req.params.friendId} }},
