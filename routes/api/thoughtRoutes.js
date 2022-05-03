@@ -60,9 +60,6 @@ router.put('/thoughts/:thoughtId', (req, res) => {
 })
 
 
-// soft
-
-
 // Delete thought
 router.delete('/thoughts/:thoughtId', async (req, res) => {
     Thought.findOneAndDelete(

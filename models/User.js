@@ -1,10 +1,12 @@
 const { Schema, model } = require("mongoose");
 
+// Custom validator to check email is in correct format
 const validateEmail = function(email) {
     const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return re.test(email)
 };
 
+// Schema to define User document
 const userSchema = new Schema(
   {
     username: {
@@ -41,10 +43,12 @@ const userSchema = new Schema(
   }
 );
 
+// Virtual displaying how many friends user has added
 userSchema.virtual('friendCount').get(function () {
     return this.friends.length;
 });
 
+// Initialise User model
 const User = model('user', userSchema);
 
 module.exports = User;

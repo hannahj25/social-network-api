@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const User = require("./User");
 
+// Schema defines Reaction subdocument
 const reactionSchema = new Schema(
     {
       body: {
@@ -20,7 +21,7 @@ const reactionSchema = new Schema(
     
   );
 
-
+// Schema defines Thought document
 const thoughtSchema = new Schema(
   {
     thoughtText: {
@@ -48,10 +49,12 @@ const thoughtSchema = new Schema(
   }
 );
 
+// Virtual to display how many reactions a post has
 thoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
 });
 
+// Initialise Thought model
 const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;
