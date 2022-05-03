@@ -8,7 +8,7 @@ const reactionSchema = new Schema(
         required: true,
         maxlength: 280,
       },
-      user_id: {
+      userId: {
           type: Schema.Types.ObjectId,
           ref: User
       }
@@ -30,6 +30,10 @@ const thoughtSchema = new Schema(
         maxLength: 280
         
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: User
+  },
     reactions: [
       reactionSchema
     ],

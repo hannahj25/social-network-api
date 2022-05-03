@@ -28,7 +28,7 @@ router.post('/thoughts', (req, res) => {
     .then((thought) => {
         return User.findOneAndUpdate(
             { _id: req.body.userId },
-            { $addToSet: { thoughts: thoughtId}},
+            { $addToSet: { thoughts: req.params.thoughtId}},
             { runValidators: true, new: true }
         );
     })
@@ -43,9 +43,26 @@ router.post('/thoughts', (req, res) => {
 })
 
 // Update existing thought
+router.put('/thoughts/:thoughtId', (req, res) => {
+    Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId},
+        { $set: req.body },
+        { runValidators: true, new: true}
+    )
+    .then((thought) =>
+    !thought? res.status(404).json({message: 'No thought with this id!'})
+    : res.json(thought)
+    )
+    .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+})
 
 // Delete thought
 
 // Create reaction to thought
 
 // Delte reaction from thought
+
+module.exports = router
