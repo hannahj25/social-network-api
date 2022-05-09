@@ -30,6 +30,10 @@ Then:
 
 `npm start`
 
+Video link demonstrating how to install dependencies then start the server:
+
+https://drive.google.com/file/d/1od8bIo85dKUl6Rw3VJJq1dHhabybSiuY/view
+
 ## Usage
 Video link demonstrating how to test the routes in Insomnia:
 
