@@ -37,6 +37,8 @@ https://drive.google.com/file/d/1od8bIo85dKUl6Rw3VJJq1dHhabybSiuY/view
 ## Usage
 Video link demonstrating how to test the routes in Insomnia:
 
+https://drive.google.com/file/d/1jqB1Nvm8ZLgwWzMtkqUDfau2SBW1fzzY/view
+
 ## Built With
 - JavaScript
 - Node.js

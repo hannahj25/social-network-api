@@ -49,7 +49,7 @@ router.put('/users/:userId', (req, res) => {
 
 // Delete user
 router.delete('/users/:userId', (req, res) => {
-    User.findOneAndDelete(req.params.userId)
+    User.findOneAndDelete({ _id: req.params.userId} )
     .then(async (user) =>{
         if(!user){
             return res.status(404).json({ message: "No user with that id!"})
@@ -80,6 +80,7 @@ router.delete('/users/:userId/friends/:friendId', (req, res) => {
     User.findOneAndUpdate(
         { _id: req.params.userId},
          {$pull: { friends:  { friendId: req.params.friendId} }},
+         { new: true }
     )
     .then((user) =>
     !user
